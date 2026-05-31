@@ -204,6 +204,3 @@ function Footer() {
     </footer>
   );
 }
-    </div>
-  );
-}
