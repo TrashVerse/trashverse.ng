@@ -17,7 +17,7 @@ function AdminPanel() {
 
   const { data: requests = [], isLoading } = useQuery({
     queryKey: ["admin_pickups"],
-    enabled: isAdmin || roles.includes("supervisor"),
+    enabled: isAdmin || roles.includes("agent"),
     queryFn: async () => {
       const { data, error } = await supabase
         .from("pickup_requests")
@@ -29,12 +29,12 @@ function AdminPanel() {
   });
 
   if (loading) return <p className="p-8 text-muted-foreground">Loading...</p>;
-  if (!isAdmin && !roles.includes("supervisor")) {
+  if (!isAdmin && !roles.includes("agent")) {
     return (
       <main className="mx-auto max-w-2xl px-4 py-16 text-center">
         <ShieldCheck className="h-12 w-12 mx-auto text-muted-foreground" />
         <h1 className="mt-4 text-2xl font-bold">Admins only</h1>
-        <p className="mt-2 text-muted-foreground">You need admin or supervisor permissions to view this page.</p>
+        <p className="mt-2 text-muted-foreground">You need admin or agent permissions to view this page.</p>
       </main>
     );
   }
