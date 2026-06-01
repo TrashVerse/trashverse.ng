@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Recycle, Menu, X, LogOut, LayoutDashboard, ShieldCheck } from "lucide-react";
+import { Recycle, Menu, X, LogOut, LayoutDashboard, ShieldCheck, Users } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/lib/auth";
@@ -28,6 +28,7 @@ export function SiteHeader() {
           {user && <Link to="/dashboard" className="hover:text-primary transition">Dashboard</Link>}
           {user && <Link to="/request-pickup" className="hover:text-primary transition">Request Pickup</Link>}
           {isAdmin && <Link to="/admin" className="hover:text-primary transition flex items-center gap-1"><ShieldCheck className="h-4 w-4" />Admin</Link>}
+          {isAdmin && <Link to="/admin/users" className="hover:text-primary transition flex items-center gap-1"><Users className="h-4 w-4" />Users</Link>}
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
@@ -55,6 +56,7 @@ export function SiteHeader() {
             {user && <Link to="/dashboard" onClick={() => setOpen(false)} className="py-2 flex items-center gap-2"><LayoutDashboard className="h-4 w-4" />Dashboard</Link>}
             {user && <Link to="/request-pickup" onClick={() => setOpen(false)} className="py-2">Request Pickup</Link>}
             {isAdmin && <Link to="/admin" onClick={() => setOpen(false)} className="py-2 flex items-center gap-2"><ShieldCheck className="h-4 w-4" />Admin</Link>}
+            {isAdmin && <Link to="/admin/users" onClick={() => setOpen(false)} className="py-2 flex items-center gap-2"><Users className="h-4 w-4" />Users</Link>}
             {user ? (
               <Button variant="outline" onClick={() => { setOpen(false); handleSignOut(); }} className="w-full gap-2 mt-2">
                 <LogOut className="h-4 w-4" /> Sign out
