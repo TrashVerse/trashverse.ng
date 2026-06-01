@@ -13,7 +13,7 @@ export const Route = createFileRoute("/_authenticated/admin/users")({
   component: AdminUsers,
 });
 
-type Role = "admin" | "supervisor" | "user";
+type Role = "admin" | "agent" | "user";
 
 function AdminUsers() {
   const { isAdmin, loading } = useAuth();
@@ -65,7 +65,7 @@ function AdminUsers() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">User Management</h1>
-            <p className="text-muted-foreground text-sm">Assign admin and supervisor roles.</p>
+            <p className="text-muted-foreground text-sm">Assign admin and agent roles.</p>
           </div>
         </div>
         <Button asChild variant="outline"><Link to="/admin">Pickup verification →</Link></Button>
@@ -96,9 +96,9 @@ function AdminUsers() {
 }
 
 function UserRow({ u, onAdd, onRemove }: { u: any; onAdd: (id: string, r: Role) => void; onRemove: (id: string) => void }) {
-  const [pending, setPending] = useState<Role>("supervisor");
+  const [pending, setPending] = useState<Role>("agent");
   const existing: Role[] = u.roles.map((r: any) => r.role);
-  const available: Role[] = (["admin", "supervisor", "user"] as Role[]).filter((r) => !existing.includes(r));
+  const available: Role[] = (["admin", "agent", "user"] as Role[]).filter((r) => !existing.includes(r));
   return (
     <tr className="border-t border-border">
       <td className="px-4 py-3">
@@ -112,7 +112,7 @@ function UserRow({ u, onAdd, onRemove }: { u: any; onAdd: (id: string, r: Role) 
           {u.roles.length === 0 && <span className="text-xs text-muted-foreground">no role</span>}
           {u.roles.map((r: any) => (
             <span key={r.id} className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full ${
-              r.role === "admin" ? "bg-red-100 text-red-800" : r.role === "supervisor" ? "bg-blue-100 text-blue-800" : "bg-muted text-muted-foreground"
+              r.role === "admin" ? "bg-red-100 text-red-800" : r.role === "agent" ? "bg-blue-100 text-blue-800" : "bg-muted text-muted-foreground"
             }`}>
               {r.role}
               <button onClick={() => onRemove(r.id)} aria-label="Remove role" className="hover:text-foreground">
