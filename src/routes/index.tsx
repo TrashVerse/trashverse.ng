@@ -3,7 +3,7 @@ import { Link } from "@tanstack/react-router";
 import { Recycle, Truck, Wallet, BarChart3, Leaf, CheckCircle2, Twitter, Linkedin, Instagram } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/SiteHeader";
-import transformationVideo from "../../public/transformation.mp4.asset.json";
+import transformationVideo from "../../public/hero-explainer.mp4.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -60,7 +60,7 @@ function Hero() {
             muted
             playsInline
             className="rounded-2xl shadow-xl w-full h-auto object-cover aspect-video bg-muted"
-            aria-label="Transformation from polluted to clean Nigerian environment"
+            aria-label="How TrashVerse turns recyclable waste into eco-credits"
           />
           <div className="absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-6 bg-card rounded-xl shadow-lg p-3 sm:p-4 flex items-center gap-3 border border-border">
             <div className="h-10 w-10 rounded-full bg-primary-soft flex items-center justify-center">
