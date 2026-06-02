@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Admin Verification — TrashVerse" }] }),
+  head: () => ({ meta: [{ title: "Admin Verification — Trashverse" }] }),
   component: AdminPanel,
 });
 

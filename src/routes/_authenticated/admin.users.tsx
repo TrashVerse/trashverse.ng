@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 
 export const Route = createFileRoute("/_authenticated/admin/users")({
-  head: () => ({ meta: [{ title: "User Management — TrashVerse" }] }),
+  head: () => ({ meta: [{ title: "User Management — Trashverse" }] }),
   component: AdminUsers,
 });
 

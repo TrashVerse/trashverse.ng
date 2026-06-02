@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
-  head: () => ({ meta: [{ title: "Eco-Credits Dashboard — TrashVerse" }] }),
+  head: () => ({ meta: [{ title: "Eco-Credits Dashboard — Trashverse" }] }),
   component: Dashboard,
 });
 

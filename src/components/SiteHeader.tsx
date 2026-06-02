@@ -19,14 +19,15 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 bg-background/85 backdrop-blur border-b border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-primary">
-          <img src={logo} alt="TrashVerse" className="h-9 w-9 sm:h-10 sm:w-10 object-contain" />
-          <span className="text-xl sm:text-2xl font-bold tracking-tight">TrashVerse</span>
+          <img src={logo} alt="Trashverse" className="h-9 w-9 sm:h-10 sm:w-10 object-contain" />
+          <span className="text-xl sm:text-2xl font-bold tracking-tight">Trashverse</span>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-foreground/80">
           <Link to="/" hash="services" className="hover:text-primary transition">Core Solutions</Link>
           <Link to="/" hash="why" className="hover:text-primary transition">Why Us</Link>
           <Link to="/" hash="team" className="hover:text-primary transition">Join Us</Link>
+          <Link to="/trash-coach" className="hover:text-primary transition">Trash Coach</Link>
           {user && <Link to="/dashboard" className="hover:text-primary transition">Dashboard</Link>}
           {user && <Link to="/request-pickup" className="hover:text-primary transition">Request Pickup</Link>}
           {isAdmin && <Link to="/admin" className="hover:text-primary transition flex items-center gap-1"><ShieldCheck className="h-4 w-4" />Admin</Link>}
@@ -56,6 +57,7 @@ export function SiteHeader() {
             <Link to="/" hash="services" onClick={() => setOpen(false)} className="py-2">Core Solutions</Link>
             <Link to="/" hash="why" onClick={() => setOpen(false)} className="py-2">Why Us</Link>
             <Link to="/" hash="team" onClick={() => setOpen(false)} className="py-2">Join Us</Link>
+            <Link to="/trash-coach" onClick={() => setOpen(false)} className="py-2">Trash Coach</Link>
             {user && <Link to="/dashboard" onClick={() => setOpen(false)} className="py-2 flex items-center gap-2"><LayoutDashboard className="h-4 w-4" />Dashboard</Link>}
             {user && <Link to="/request-pickup" onClick={() => setOpen(false)} className="py-2">Request Pickup</Link>}
             {isAdmin && <Link to="/admin" onClick={() => setOpen(false)} className="py-2 flex items-center gap-2"><ShieldCheck className="h-4 w-4" />Admin</Link>}
