@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Users, ShieldCheck, Trash2, Plus, Banknote } from "lucide-react";
+import { Users, ShieldCheck, Trash2, Plus, Banknote, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -23,13 +23,15 @@ function AdminUsers() {
     queryKey: ["admin_users"],
     enabled: isAdmin,
     queryFn: async () => {
-      const [{ data: profiles }, { data: roles }] = await Promise.all([
+      const [{ data: profiles }, { data: roles }, { data: creds }] = await Promise.all([
         supabase.from("profiles").select("id, full_name, phone, total_credits, created_at").order("created_at", { ascending: false }),
         supabase.from("user_roles").select("user_id, role, id"),
+        supabase.from("admin_credentials").select("user_id, access_code"),
       ]);
       return (profiles ?? []).map((p) => ({
         ...p,
         roles: (roles ?? []).filter((r) => r.user_id === p.id),
+        access_code: (creds ?? []).find((c) => c.user_id === p.id)?.access_code ?? null,
       }));
     },
   });
@@ -66,6 +68,22 @@ function AdminUsers() {
     qc.invalidateQueries({ queryKey: ["admin_users"] });
   };
 
+  const setCode = async (userId: string, current: string | null) => {
+    const raw = prompt("Set admin access code (leave blank to remove)", current ?? "");
+    if (raw === null) return;
+    const code = raw.trim();
+    if (!code) {
+      const { error } = await supabase.from("admin_credentials").delete().eq("user_id", userId);
+      if (error) return toast.error(error.message);
+      toast.success("Access code removed");
+    } else {
+      const { error } = await supabase.from("admin_credentials").upsert({ user_id: userId, access_code: code });
+      if (error) return toast.error(error.message);
+      toast.success("Access code saved");
+    }
+    qc.invalidateQueries({ queryKey: ["admin_users"] });
+  };
+
   if (loading) return <p className="p-8 text-muted-foreground">Loading...</p>;
   if (!isAdmin) {
     return (
@@ -85,10 +103,13 @@ function AdminUsers() {
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">User Management</h1>
-            <p className="text-muted-foreground text-sm">Assign admin and agent roles.</p>
+            <p className="text-muted-foreground text-sm">Assign roles (max 5 admins) and set admin access codes.</p>
           </div>
         </div>
-        <Button asChild variant="outline"><Link to="/admin">Pickup verification →</Link></Button>
+        <div className="flex gap-2">
+          <Button asChild variant="outline"><Link to="/admin/logs">Login logs</Link></Button>
+          <Button asChild variant="outline"><Link to="/admin">Pickup verification →</Link></Button>
+        </div>
       </div>
 
       <div className="mt-8 bg-card border border-border rounded-2xl overflow-hidden">
@@ -106,7 +127,7 @@ function AdminUsers() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((u) => <UserRow key={u.id} u={u} onAdd={addRole} onRemove={removeRole} onPay={payOut} />)}
+              {rows.map((u) => <UserRow key={u.id} u={u} onAdd={addRole} onRemove={removeRole} onPay={payOut} onSetCode={setCode} />)}
             </tbody>
           </table>
         )}
@@ -115,15 +136,22 @@ function AdminUsers() {
   );
 }
 
-function UserRow({ u, onAdd, onRemove, onPay }: { u: any; onAdd: (id: string, r: Role) => void; onRemove: (id: string) => void; onPay: (id: string, bal: number) => void }) {
+function UserRow({ u, onAdd, onRemove, onPay, onSetCode }: { u: any; onAdd: (id: string, r: Role) => void; onRemove: (id: string) => void; onPay: (id: string, bal: number) => void; onSetCode: (id: string, current: string | null) => void }) {
   const [pending, setPending] = useState<Role>("agent");
   const existing: Role[] = u.roles.map((r: any) => r.role);
   const available: Role[] = (["admin", "agent", "user"] as Role[]).filter((r) => !existing.includes(r));
+  const isAdminRow = existing.includes("admin");
   return (
     <tr className="border-t border-border">
       <td className="px-4 py-3">
         <p className="font-semibold">{u.full_name || "Unnamed"}</p>
         <p className="text-xs text-muted-foreground font-mono truncate max-w-[180px]">{u.id}</p>
+        {isAdminRow && (
+          <button onClick={() => onSetCode(u.id, u.access_code)} className="mt-1 inline-flex items-center gap-1 text-xs text-primary hover:underline">
+            <KeyRound className="h-3 w-3" />
+            {u.access_code ? `Code: ${u.access_code}` : "Set access code"}
+          </button>
+        )}
       </td>
       <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{u.phone || "—"}</td>
       <td className="px-4 py-3 text-right">
