@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Users, ShieldCheck, Trash2, Plus } from "lucide-react";
+import { Users, ShieldCheck, Trash2, Plus, Banknote } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -46,6 +46,26 @@ function AdminUsers() {
     else { toast.success("Role removed"); qc.invalidateQueries({ queryKey: ["admin_users"] }); }
   };
 
+  const payOut = async (userId: string, currentBalance: number) => {
+    const raw = prompt(`Pay out how many credits? (balance: ${currentBalance.toFixed(2)})`, currentBalance.toFixed(2));
+    if (!raw) return;
+    const amount = parseFloat(raw);
+    if (!Number.isFinite(amount) || amount <= 0) return toast.error("Invalid amount");
+    if (amount > currentBalance) return toast.error("Amount exceeds balance");
+    const newBalance = +(currentBalance - amount).toFixed(2);
+    const { error: upErr } = await supabase.from("profiles").update({ total_credits: newBalance }).eq("id", userId);
+    if (upErr) return toast.error(upErr.message);
+    const { error: lErr } = await supabase.from("credit_ledger").insert({
+      user_id: userId,
+      amount: -amount,
+      balance_after: newBalance,
+      reason: "Admin payout",
+    });
+    if (lErr) return toast.error(lErr.message);
+    toast.success(`Paid out ${amount.toFixed(2)} credits`);
+    qc.invalidateQueries({ queryKey: ["admin_users"] });
+  };
+
   if (loading) return <p className="p-8 text-muted-foreground">Loading...</p>;
   if (!isAdmin) {
     return (
@@ -86,7 +106,7 @@ function AdminUsers() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((u) => <UserRow key={u.id} u={u} onAdd={addRole} onRemove={removeRole} />)}
+              {rows.map((u) => <UserRow key={u.id} u={u} onAdd={addRole} onRemove={removeRole} onPay={payOut} />)}
             </tbody>
           </table>
         )}
@@ -95,7 +115,7 @@ function AdminUsers() {
   );
 }
 
-function UserRow({ u, onAdd, onRemove }: { u: any; onAdd: (id: string, r: Role) => void; onRemove: (id: string) => void }) {
+function UserRow({ u, onAdd, onRemove, onPay }: { u: any; onAdd: (id: string, r: Role) => void; onRemove: (id: string) => void; onPay: (id: string, bal: number) => void }) {
   const [pending, setPending] = useState<Role>("agent");
   const existing: Role[] = u.roles.map((r: any) => r.role);
   const available: Role[] = (["admin", "agent", "user"] as Role[]).filter((r) => !existing.includes(r));
@@ -106,7 +126,16 @@ function UserRow({ u, onAdd, onRemove }: { u: any; onAdd: (id: string, r: Role) 
         <p className="text-xs text-muted-foreground font-mono truncate max-w-[180px]">{u.id}</p>
       </td>
       <td className="px-4 py-3 text-muted-foreground hidden md:table-cell">{u.phone || "—"}</td>
-      <td className="px-4 py-3 text-right font-semibold text-primary">{Number(u.total_credits).toFixed(2)}</td>
+      <td className="px-4 py-3 text-right">
+        <div className="flex items-center justify-end gap-2">
+          <span className="font-semibold text-primary">{Number(u.total_credits).toFixed(2)}</span>
+          {Number(u.total_credits) > 0 && (
+            <Button size="sm" variant="outline" className="h-7 px-2 gap-1" onClick={() => onPay(u.id, Number(u.total_credits))}>
+              <Banknote className="h-3.5 w-3.5" /> Pay
+            </Button>
+          )}
+        </div>
+      </td>
       <td className="px-4 py-3">
         <div className="flex flex-wrap gap-1.5">
           {u.roles.length === 0 && <span className="text-xs text-muted-foreground">no role</span>}
