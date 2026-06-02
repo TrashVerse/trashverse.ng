@@ -173,9 +173,13 @@ function Footer() {
         <div>
           <h4 className="text-sm font-bold tracking-widest text-foreground/80">QUICK LINKS</h4>
           <ul className="mt-4 space-y-2 text-sm">
+            <li><Link to="/" hash="services" className="hover:text-primary">Core Solutions</Link></li>
+            <li><Link to="/" hash="why" className="hover:text-primary">Why Us</Link></li>
+            <li><Link to="/" hash="team" className="hover:text-primary">Join Us</Link></li>
+            <li><Link to="/" hash="contact" className="hover:text-primary">Contact</Link></li>
             <li><Link to="/trash-coach" className="hover:text-primary">Trash Coach</Link></li>
             <li><Link to="/careers" className="hover:text-primary">Careers</Link></li>
-            <li><Link to="/admin" className="hover:text-primary">Admin</Link></li>
+            <li><Link to="/admin-login" className="hover:text-primary">Admin</Link></li>
             <li><a href="mailto:hello@trashverse.com?subject=Help" className="hover:text-primary">Help Center</a></li>
           </ul>
         </div>
