@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 export const Route = createFileRoute("/_authenticated/request-pickup")({
-  head: () => ({ meta: [{ title: "Request a Pickup — TrashVerse" }] }),
+  head: () => ({ meta: [{ title: "Request a Pickup — Trashverse" }] }),
   component: RequestPickup,
 });
 

@@ -1,6 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Recycle } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -9,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/lib/auth";
+import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — TrashVerse" }] }),
+  head: () => ({ meta: [{ title: "Sign in — Trashverse" }] }),
   component: AuthPage,
 });
 
@@ -61,8 +61,8 @@ function AuthPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-hero-bg px-4 py-10">
       <Link to="/" className="flex items-center gap-2 text-primary mb-6">
-        <Recycle className="h-7 w-7" />
-        <span className="text-2xl font-bold">TrashVerse</span>
+        <img src={logo} alt="Trashverse" className="h-8 w-8 object-contain" />
+        <span className="text-2xl font-bold">Trashverse</span>
       </Link>
 
       <div className="w-full max-w-md bg-card border border-border rounded-2xl shadow-lg p-6 sm:p-8">

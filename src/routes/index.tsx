@@ -1,17 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
-import { Truck, Wallet, BarChart3, Leaf, CheckCircle2, Facebook } from "lucide-react";
+import { Truck, Wallet, BarChart3, Leaf, CheckCircle2, Facebook, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/SiteHeader";
-import transformationVideo from "../../public/hero-explainer.mp4.asset.json";
+import heroImage from "@/assets/hero-trashverse.jpg.asset.json";
 import logo from "@/assets/logo.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "TrashVerse — Turning Today's Waste into Tomorrow's Wealth" },
-      { name: "description", content: "TrashVerse is revolutionizing recycling through smart technology, bridging waste management and financial inclusion." },
-      { property: "og:title", content: "TrashVerse — Eco-Credits for Waste Management" },
+      { title: "Trashverse — Turning Today's Waste into Tomorrow's Wealth" },
+      { name: "description", content: "Trashverse is revolutionizing recycling through smart technology, bridging waste management and financial inclusion." },
+      { property: "og:title", content: "Trashverse — Eco-Credits for Waste Management" },
       { property: "og:description", content: "Earn digital rewards for every kilogram of waste recycled through our platform." },
     ],
   }),
@@ -42,26 +42,22 @@ function Hero() {
             Turning Today's <span className="text-primary">Waste</span> into Tomorrow's Wealth.
           </h1>
           <p className="mt-4 sm:mt-6 text-base sm:text-lg text-muted-foreground max-w-lg">
-            TrashVerse is revolutionizing recycling through smart technology. We bridge the gap between waste management and financial inclusion for a sustainable ecosystem.
+            Trashverse is revolutionizing recycling through smart technology. We bridge the gap between waste management and financial inclusion for a sustainable ecosystem.
           </p>
           <div className="mt-6 sm:mt-8 flex flex-wrap gap-3 sm:gap-4">
             <Button asChild size="lg" className="rounded-md bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-7 h-12">
               <Link to="/request-pickup">Schedule Pickup</Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="rounded-md border-2 border-primary text-primary hover:bg-primary/10 px-6 sm:px-7 h-12">
-              <Link to="/" hash="services">Learn More</Link>
+              <Link to="/trash-coach">Learn More</Link>
             </Button>
           </div>
         </div>
         <div className="relative">
-          <video
-            src={transformationVideo.url}
-            autoPlay
-            loop
-            muted
-            playsInline
+          <img
+            src={heroImage.url}
+            alt="Trashverse turning recyclable waste into eco-credits"
             className="rounded-2xl shadow-xl w-full h-auto object-cover aspect-video bg-muted"
-            aria-label="How TrashVerse turns recyclable waste into eco-credits"
           />
           <div className="absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-6 bg-card rounded-xl shadow-lg p-3 sm:p-4 flex items-center gap-3 border border-border">
             <div className="h-10 w-10 rounded-full bg-primary-soft flex items-center justify-center">
@@ -122,7 +118,7 @@ function WhyUs() {
           </p>
         </div>
         <div>
-          <h2 className="text-2xl sm:text-3xl font-bold">Why TrashVerse?</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold">Why Trashverse?</h2>
           <ul className="mt-6 space-y-4">
             {points.map((p) => (
               <li key={p} className="flex items-start gap-3">
@@ -152,7 +148,9 @@ function JoinTeam() {
             <h3 className="text-xl sm:text-2xl font-bold text-secondary-foreground">We are hiring Field Agents!</h3>
             <p className="mt-2 text-muted-foreground">Help manage collection hubs and lead community outreach programs.</p>
           </div>
-          <Button size="lg" className="rounded-md bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 whitespace-nowrap w-full md:w-auto">View Openings</Button>
+          <Button asChild size="lg" className="rounded-md bg-primary hover:bg-primary/90 text-primary-foreground px-8 h-12 whitespace-nowrap w-full md:w-auto">
+            <Link to="/careers">View Openings</Link>
+          </Button>
         </div>
       </div>
     </section>
@@ -164,10 +162,10 @@ function Footer() {
     <footer id="contact" className="border-t border-border bg-muted/40">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-16 grid sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10">
         <div>
-          <a href="#" className="flex items-center gap-2 text-primary">
-            <img src={logo} alt="TrashVerse" className="h-8 w-8 object-contain" />
-            <span className="text-xl font-bold">TrashVerse</span>
-          </a>
+          <Link to="/" className="flex items-center gap-2 text-primary">
+            <img src={logo} alt="Trashverse" className="h-8 w-8 object-contain" />
+            <span className="text-xl font-bold">Trashverse</span>
+          </Link>
           <p className="mt-4 text-sm text-muted-foreground max-w-xs">
             Transforming waste management into a profitable and sustainable experience for everyone.
           </p>
@@ -175,16 +173,18 @@ function Footer() {
         <div>
           <h4 className="text-sm font-bold tracking-widest text-foreground/80">QUICK LINKS</h4>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><a href="#" className="hover:text-primary">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-primary">Partnerships</a></li>
-            <li><a href="#" className="hover:text-primary">Media Kit</a></li>
+            <li><Link to="/trash-coach" className="hover:text-primary">Trash Coach</Link></li>
+            <li><Link to="/careers" className="hover:text-primary">Careers</Link></li>
+            <li><Link to="/admin" className="hover:text-primary">Admin</Link></li>
+            <li><a href="mailto:hello@trashverse.com?subject=Help" className="hover:text-primary">Help Center</a></li>
           </ul>
         </div>
         <div>
           <h4 className="text-sm font-bold tracking-widest text-foreground/80">CONTACT US</h4>
           <ul className="mt-4 space-y-2 text-sm text-muted-foreground">
             <li>Abia State, Nigeria</li>
-            <li>hello@trashverse.com</li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /><a href="mailto:hello@trashverse.com" className="hover:text-primary">hello@trashverse.com</a></li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /><a href="tel:+2348126727596" className="hover:text-primary">+234 812 672 7596</a></li>
           </ul>
           <div className="mt-4 flex gap-3 text-muted-foreground">
             <a href="https://x.com/trash_verse" target="_blank" rel="noreferrer" aria-label="X" className="hover:text-primary">
@@ -201,7 +201,7 @@ function Footer() {
         </div>
       </div>
       <div className="border-t border-border py-6 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} TrashVerse Inc. All rights reserved.
+        © {new Date().getFullYear()} Trashverse Inc. All rights reserved.
       </div>
     </footer>
   );

@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrashCoachRouteImport } from './routes/trash-coach'
+import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +19,16 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin.users'
 
+const TrashCoachRoute = TrashCoachRouteImport.update({
+  id: '/trash-coach',
+  path: '/trash-coach',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersRoute = CareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -56,6 +68,8 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
+  '/trash-coach': typeof TrashCoachRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/request-pickup': typeof AuthenticatedRequestPickupRoute
@@ -64,6 +78,8 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
+  '/trash-coach': typeof TrashCoachRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/request-pickup': typeof AuthenticatedRequestPickupRoute
@@ -74,6 +90,8 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/careers': typeof CareersRoute
+  '/trash-coach': typeof TrashCoachRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/request-pickup': typeof AuthenticatedRequestPickupRoute
@@ -84,6 +102,8 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/careers'
+    | '/trash-coach'
     | '/admin'
     | '/dashboard'
     | '/request-pickup'
@@ -92,6 +112,8 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/careers'
+    | '/trash-coach'
     | '/admin'
     | '/dashboard'
     | '/request-pickup'
@@ -101,6 +123,8 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/careers'
+    | '/trash-coach'
     | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/request-pickup'
@@ -111,10 +135,26 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AuthRoute: typeof AuthRoute
+  CareersRoute: typeof CareersRoute
+  TrashCoachRoute: typeof TrashCoachRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trash-coach': {
+      id: '/trash-coach'
+      path: '/trash-coach'
+      fullPath: '/trash-coach'
+      preLoaderRoute: typeof TrashCoachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers': {
+      id: '/careers'
+      path: '/careers'
+      fullPath: '/careers'
+      preLoaderRoute: typeof CareersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -198,6 +238,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AuthRoute: AuthRoute,
+  CareersRoute: CareersRoute,
+  TrashCoachRoute: TrashCoachRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
