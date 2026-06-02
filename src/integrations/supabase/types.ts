@@ -14,6 +14,72 @@ export type Database = {
   }
   public: {
     Tables: {
+      agent_applications: {
+        Row: {
+          city: string
+          created_at: string
+          email: string
+          experience: string | null
+          full_name: string
+          id: string
+          phone: string
+          status: string
+          user_id: string | null
+          why: string | null
+        }
+        Insert: {
+          city: string
+          created_at?: string
+          email: string
+          experience?: string | null
+          full_name: string
+          id?: string
+          phone: string
+          status?: string
+          user_id?: string | null
+          why?: string | null
+        }
+        Update: {
+          city?: string
+          created_at?: string
+          email?: string
+          experience?: string | null
+          full_name?: string
+          id?: string
+          phone?: string
+          status?: string
+          user_id?: string | null
+          why?: string | null
+        }
+        Relationships: []
+      }
+      coach_posts: {
+        Row: {
+          author_id: string
+          body: string
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          body: string
+          created_at?: string
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          body?: string
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       credit_ledger: {
         Row: {
           amount: number
