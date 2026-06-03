@@ -47,7 +47,7 @@ function AdminLogin() {
     try {
       const { data: signIn, error: sErr } = await supabase.auth.signInWithPassword({ email, password });
       if (sErr || !signIn.user) {
-        toast.error(friendlyError(sErr?, "Invalid credentials"));
+        toast.error(friendlyError(sErr, "Invalid credentials"));
         return;
       }
       const uid = signIn.user.id;
