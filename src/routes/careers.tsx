@@ -30,7 +30,7 @@ function Careers() {
     setLoading(true);
     const { error } = await supabase.from("agent_applications").insert(form);
     setLoading(false);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(friendlyError(error));
     setDone(true);
     toast.success("Application submitted — we'll be in touch!");
   };

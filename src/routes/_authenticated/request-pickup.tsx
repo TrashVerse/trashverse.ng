@@ -61,7 +61,7 @@ function RequestPickup() {
     });
     setLoading(false);
     if (error) {
-      toast.error(error.message);
+      toast.error(friendlyError(error));
     } else {
       toast.success("Pickup request submitted!");
       navigate({ to: "/dashboard" });

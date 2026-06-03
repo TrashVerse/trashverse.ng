@@ -42,7 +42,7 @@ function AdminPanel() {
 
   const updateStatus = async (id: string, status: "approved" | "completed" | "rejected") => {
     const { error } = await supabase.from("pickup_requests").update({ status }).eq("id", id);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error));
     else {
       toast.success(`Marked ${status}`);
       qc.invalidateQueries({ queryKey: ["admin_pickups"] });
