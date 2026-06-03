@@ -53,11 +53,11 @@ function Hero() {
             </Button>
           </div>
         </div>
-        <div className="relative">
+        <div className="relative mx-auto w-full max-w-sm md:max-w-md">
           <img
             src={heroImage.url}
             alt="Trashverse turning recyclable waste into eco-credits"
-            className="rounded-2xl shadow-xl w-full h-auto object-cover aspect-video bg-muted"
+            className="rounded-2xl shadow-xl w-full h-auto object-contain aspect-[3/4] bg-muted"
           />
           <div className="absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-6 bg-card rounded-xl shadow-lg p-3 sm:p-4 flex items-center gap-3 border border-border">
             <div className="h-10 w-10 rounded-full bg-primary-soft flex items-center justify-center">
@@ -173,12 +173,9 @@ function Footer() {
         <div>
           <h4 className="text-sm font-bold tracking-widest text-foreground/80">QUICK LINKS</h4>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link to="/" hash="services" className="hover:text-primary">Core Solutions</Link></li>
-            <li><Link to="/" hash="why" className="hover:text-primary">Why Us</Link></li>
-            <li><Link to="/" hash="team" className="hover:text-primary">Join Us</Link></li>
-            <li><Link to="/" hash="contact" className="hover:text-primary">Contact</Link></li>
-            <li><Link to="/trash-coach" className="hover:text-primary">Trash Coach</Link></li>
-            <li><Link to="/careers" className="hover:text-primary">Careers</Link></li>
+            <li><Link to="/" hash="privacy" className="hover:text-primary">Privacy Policy</Link></li>
+            <li><Link to="/" hash="partners" className="hover:text-primary">Partners</Link></li>
+            <li><Link to="/" hash="media" className="hover:text-primary">Media Kits</Link></li>
             <li><Link to="/admin-login" className="hover:text-primary">Admin</Link></li>
             <li><a href="mailto:hello@trashverse.com?subject=Help" className="hover:text-primary">Help Center</a></li>
           </ul>
