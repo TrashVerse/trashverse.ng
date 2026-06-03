@@ -53,11 +53,11 @@ function Hero() {
             </Button>
           </div>
         </div>
-        <div className="relative">
+        <div className="relative mx-auto w-full max-w-sm md:max-w-md">
           <img
             src={heroImage.url}
             alt="Trashverse turning recyclable waste into eco-credits"
-            className="rounded-2xl shadow-xl w-full h-auto object-cover aspect-video bg-muted"
+            className="rounded-2xl shadow-xl w-full h-auto object-contain aspect-[3/4] bg-muted"
           />
           <div className="absolute -bottom-4 -left-2 sm:-bottom-6 sm:-left-6 bg-card rounded-xl shadow-lg p-3 sm:p-4 flex items-center gap-3 border border-border">
             <div className="h-10 w-10 rounded-full bg-primary-soft flex items-center justify-center">
