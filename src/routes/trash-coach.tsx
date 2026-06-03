@@ -1,3 +1,4 @@
+import { friendlyError } from "@/lib/friendly-error";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -47,11 +48,11 @@ function TrashCoach() {
     if (!user) return;
     if (editingId) {
       const { error } = await supabase.from("coach_posts").update({ title, body }).eq("id", editingId);
-      if (error) return toast.error(error.message);
+      if (error) return toast.error(friendlyError(error));
       toast.success("Post updated");
     } else {
       const { error } = await supabase.from("coach_posts").insert({ title, body, author_id: user.id });
-      if (error) return toast.error(error.message);
+      if (error) return toast.error(friendlyError(error));
       toast.success("Post published");
     }
     reset();
@@ -61,7 +62,7 @@ function TrashCoach() {
   const remove = async (id: string) => {
     if (!confirm("Delete this post?")) return;
     const { error } = await supabase.from("coach_posts").delete().eq("id", id);
-    if (error) return toast.error(error.message);
+    if (error) return toast.error(friendlyError(error));
     toast.success("Deleted");
     qc.invalidateQueries({ queryKey: ["coach_posts"] });
   };

@@ -1,3 +1,4 @@
+import { friendlyError } from "@/lib/friendly-error";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Users, ShieldCheck, Trash2, Plus, Banknote, KeyRound } from "lucide-react";
@@ -38,13 +39,13 @@ function AdminUsers() {
 
   const addRole = async (userId: string, role: Role) => {
     const { error } = await supabase.from("user_roles").insert({ user_id: userId, role });
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error));
     else { toast.success(`Granted ${role}`); qc.invalidateQueries({ queryKey: ["admin_users"] }); }
   };
 
   const removeRole = async (id: string) => {
     const { error } = await supabase.from("user_roles").delete().eq("id", id);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error));
     else { toast.success("Role removed"); qc.invalidateQueries({ queryKey: ["admin_users"] }); }
   };
 
@@ -56,14 +57,14 @@ function AdminUsers() {
     if (amount > currentBalance) return toast.error("Amount exceeds balance");
     const newBalance = +(currentBalance - amount).toFixed(2);
     const { error: upErr } = await supabase.from("profiles").update({ total_credits: newBalance }).eq("id", userId);
-    if (upErr) return toast.error(upErr.message);
+    if (upErr) return toast.error(friendlyError(upErr));
     const { error: lErr } = await supabase.from("credit_ledger").insert({
       user_id: userId,
       amount: -amount,
       balance_after: newBalance,
       reason: "Admin payout",
     });
-    if (lErr) return toast.error(lErr.message);
+    if (lErr) return toast.error(friendlyError(lErr));
     toast.success(`Paid out ${amount.toFixed(2)} credits`);
     qc.invalidateQueries({ queryKey: ["admin_users"] });
   };
@@ -74,11 +75,11 @@ function AdminUsers() {
     const code = raw.trim();
     if (!code) {
       const { error } = await supabase.from("admin_credentials").delete().eq("user_id", userId);
-      if (error) return toast.error(error.message);
+      if (error) return toast.error(friendlyError(error));
       toast.success("Access code removed");
     } else {
       const { error } = await supabase.from("admin_credentials").upsert({ user_id: userId, access_code: code });
-      if (error) return toast.error(error.message);
+      if (error) return toast.error(friendlyError(error));
       toast.success("Access code saved");
     }
     qc.invalidateQueries({ queryKey: ["admin_users"] });

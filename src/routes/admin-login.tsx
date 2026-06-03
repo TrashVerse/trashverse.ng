@@ -1,3 +1,4 @@
+import { friendlyError } from "@/lib/friendly-error";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -46,7 +47,7 @@ function AdminLogin() {
     try {
       const { data: signIn, error: sErr } = await supabase.auth.signInWithPassword({ email, password });
       if (sErr || !signIn.user) {
-        toast.error(sErr?.message || "Invalid credentials");
+        toast.error(friendlyError(sErr?, "Invalid credentials"));
         return;
       }
       const uid = signIn.user.id;

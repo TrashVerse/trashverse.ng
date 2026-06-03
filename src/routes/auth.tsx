@@ -1,3 +1,4 @@
+import { friendlyError } from "@/lib/friendly-error";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -33,7 +34,7 @@ function AuthPage() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error));
     else toast.success("Welcome back!");
   };
 
@@ -49,13 +50,13 @@ function AuthPage() {
       },
     });
     setLoading(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(friendlyError(error));
     else toast.success("Account created — check your email to confirm.");
   };
 
   const handleGoogle = async () => {
     const res = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/dashboard" });
-    if (res.error) toast.error(res.error.message || "Google sign-in failed");
+    if (res.error) toast.error(friendlyError(res.error, "Google sign-in failed"));
   };
 
   return (
