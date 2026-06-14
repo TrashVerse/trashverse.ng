@@ -9,10 +9,10 @@
       "runtime": "nodejs20.x"
     }
   },
-  "rewrites": [
+  "routes": [
     {
-      "source": "/(.*)",
-      "destination": "/api/server"
+      "src": "/((?!api/).*)",
+      "dest": "/api/server"
     }
   ]
 }
