@@ -4,15 +4,10 @@
   "outputDirectory": "dist/client",
   "installCommand": "npm install",
   "framework": "vite",
-  "functions": {
-    "api/server.js": {
-      "runtime": "nodejs20.x"
-    }
-  },
-  "routes": [
+  "rewrites": [
     {
-      "src": "/((?!api/).*)",
-      "dest": "/api/server"
+      "source": "/(.*)",
+      "destination": "/api/server"
     }
   ]
 }
