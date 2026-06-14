@@ -22,9 +22,11 @@ async function getServerEntry() {
   return serverEntry;
 }
 
-export default {
-  async fetch(request, env, ctx) {
-    const handler = await getServerEntry();
-    return handler.fetch(request, env, ctx);
-  },
+export const config = {
+  runtime: 'nodejs20.x',
 };
+
+export default async function handler(request, context) {
+  const handler = await getServerEntry();
+  return handler.fetch(request, {}, context);
+}
