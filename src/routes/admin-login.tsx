@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,16 +21,15 @@ function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [code, setCode] = useState("");
+  const [sessionUser, setSessionUser] = useState<{ id: string; email: string } | null>(null);
 
   useEffect(() => {
-    // If already signed-in as admin, jump in.
     (async () => {
       const { data } = await supabase.auth.getUser();
       if (!data.user) return;
-      const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
-      if ((roles ?? []).some((r) => r.role === "admin")) navigate({ to: "/admin", replace: true });
+      setSessionUser({ id: data.user.id, email: data.user.email ?? "" });
     })();
-  }, [navigate]);
+  }, []);
 
   const log = async (uid: string, em: string, ok: boolean, reason?: string) => {
     await supabase.from("admin_login_logs").insert({
@@ -41,6 +41,52 @@ function AdminLogin() {
     });
   };
 
+  const verifyAdmin = async (uid: string, em: string) => {
+    const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+    const isAdmin = (roles ?? []).some((r) => r.role === "admin");
+    if (!isAdmin) {
+      await log(uid, em, false, "Not an admin");
+      await supabase.auth.signOut();
+      setSessionUser(null);
+      toast.error("This account is not an admin.");
+      return false;
+    }
+    const { data: cred } = await supabase.from("admin_credentials").select("access_code").eq("user_id", uid).maybeSingle();
+    if (!cred || cred.access_code !== code) {
+      await log(uid, em, false, "Bad access code");
+      toast.error("Invalid access code.");
+      return false;
+    }
+    await log(uid, em, true, "Login");
+    toast.success("Welcome, admin.");
+    navigate({ to: "/admin", replace: true });
+    return true;
+  };
+
+  const handleGoogle = async () => {
+    if (!code.trim()) {
+      toast.error("Enter your access code first.");
+      return;
+    }
+    setLoading(true);
+    try {
+      if (sessionUser) {
+        await verifyAdmin(sessionUser.id, sessionUser.email);
+        return;
+      }
+      const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/admin-login" });
+      if (result.error) {
+        toast.error(friendlyError(result.error, "Google sign-in failed"));
+        return;
+      }
+      if (result.redirected) return;
+      const { data } = await supabase.auth.getUser();
+      if (data.user) await verifyAdmin(data.user.id, data.user.email ?? "");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handle = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -50,28 +96,7 @@ function AdminLogin() {
         toast.error(friendlyError(sErr, "Invalid credentials"));
         return;
       }
-      const uid = signIn.user.id;
-
-      const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", uid);
-      const isAdmin = (roles ?? []).some((r) => r.role === "admin");
-      if (!isAdmin) {
-        await log(uid, email, false, "Not an admin");
-        await supabase.auth.signOut();
-        toast.error("This account is not an admin.");
-        return;
-      }
-
-      const { data: cred } = await supabase.from("admin_credentials").select("access_code").eq("user_id", uid).maybeSingle();
-      if (!cred || cred.access_code !== code) {
-        await log(uid, email, false, "Bad access code");
-        await supabase.auth.signOut();
-        toast.error("Invalid access code.");
-        return;
-      }
-
-      await log(uid, email, true, "Login");
-      toast.success("Welcome, admin.");
-      navigate({ to: "/admin", replace: true });
+      await verifyAdmin(signIn.user.id, email);
     } finally {
       setLoading(false);
     }
@@ -94,21 +119,44 @@ function AdminLogin() {
           </div>
         </div>
         <form onSubmit={handle} className="space-y-4">
+          {sessionUser ? (
+            <div className="rounded-md bg-primary-soft p-3 text-sm">
+              Signed in as <span className="font-semibold">{sessionUser.email}</span>. Enter your access code below to continue.
+            </div>
+          ) : (
+            <>
           <div>
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div>
             <Label htmlFor="pw">Password</Label>
-            <Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <Input id="pw" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
+            </>
+          )}
           <div>
             <Label htmlFor="code">Access code</Label>
             <Input id="code" value={code} onChange={(e) => setCode(e.target.value)} required placeholder="Provided by Trashverse" />
           </div>
-          <Button type="submit" disabled={loading} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
-            {loading ? "Verifying..." : "Sign in as admin"}
-          </Button>
+          {sessionUser ? (
+            <Button type="button" onClick={handleGoogle} disabled={loading} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+              {loading ? "Verifying..." : "Verify access code"}
+            </Button>
+          ) : (
+            <>
+              <Button type="submit" disabled={loading} className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                {loading ? "Verifying..." : "Sign in with email"}
+              </Button>
+              <div className="relative my-2 text-center text-xs text-muted-foreground">
+                <span className="bg-card px-2 relative z-10">or</span>
+                <div className="absolute inset-x-0 top-1/2 border-t border-border" />
+              </div>
+              <Button type="button" variant="outline" onClick={handleGoogle} disabled={loading} className="w-full">
+                Continue with Google
+              </Button>
+            </>
+          )}
         </form>
         <p className="mt-4 text-xs text-muted-foreground text-center">
           Not an admin? <Link to="/auth" className="text-primary hover:underline">User sign-in</Link>
