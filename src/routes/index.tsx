@@ -36,7 +36,7 @@ function Index() {
 function Hero() {
   return (
     <section className="bg-hero-bg">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-20 md:py-28 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 pt-4 sm:pt-6 md:pt-8 pb-12 sm:pb-20 md:pb-28 grid md:grid-cols-2 gap-8 md:gap-12 items-center">
         <div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight">
             Turning Today's <span className="text-primary">Waste</span> into Tomorrow's Wealth.
